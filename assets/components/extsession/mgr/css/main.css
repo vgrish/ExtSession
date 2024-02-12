@@ -1,0 +1,171 @@
+/* window */
+.x-window-extsession .ext-mb-content {
+    display: block;
+    margin-left: 0 !important;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.extsession-window .x-window-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.extsession-window .x-tab-strip-wrap .x-tab-strip-top li {
+    line-height: 2;
+    margin: 1px 0 0px 0px;
+    padding: 0 10px;
+}
+/* end window */
+
+
+/* actions menu */
+.extsession-cogs {
+    padding: 3px 20px 3px 5px !important
+}
+.x-menu.x-menu-floating .x-menu-item-icon {
+    line-height: inherit;
+    text-align: center;
+    margin: 0 3px;
+}
+/* end actions menu */
+
+/* grid small */
+.modx-grid-small .x-grid3-hd-inner {
+    padding: 8px 18px 8px 5px
+}
+
+.modx-grid-small .x-grid3-td-checker {
+    padding: 6px 0 0
+}
+
+.modx-grid-small .x-grid3-td-checker.x-grid3-hd {
+    padding-top: 0
+}
+
+.modx-grid-small .x-panel-tbar .x-toolbar {
+    padding-top: 2px
+}
+
+.modx-grid-small .x-panel-tbar .x-toolbar.x-small-editor .x-form-text {
+    padding: 3px 8px 2px
+}
+
+.modx-grid-small .x-panel-tbar .x-toolbar .x-btn {
+    padding: 4px 10px
+}
+
+.modx-grid-small .x-panel-bbar .x-toolbar .x-btn {
+    padding: 2px
+}
+
+.modx-grid-small .x-panel-bbar .x-toolbar .x-form-text {
+    padding: 2px 3px
+}
+
+.modx-grid-small .x-tbar-loading:before {
+    line-height: 16px
+}
+
+.modx-grid-small .x-tbar-page-first:before, .modx-grid-small .x-tbar-page-last:before, .modx-grid-small .x-tbar-page-next:before, .modx-grid-small .x-tbar-page-prev:before {
+    line-height: 16px
+}
+
+.modx-grid-small .x-btn-icon.arrow_down button:before, .modx-grid-small .x-btn-icon.arrow_up button:before, .modx-grid-small .x-btn-icon.refresh button:before {
+    line-height: 16px
+}
+
+.modx-grid-small .x-grid-group-hd {
+    padding-top: 0;
+}
+
+.modx-grid-small .x-grid-group-hd div.x-grid-group-title {
+    padding: 5px 0px 5px 5px;
+}
+
+.extsession-grid .x-grid3-cell-inner, .extsession-grid .x-grid3-hd-inner {
+    padding: 7px 10px 7px 5px;
+}
+
+.extsession-grid .x-grid3 .x-small-editor .x-form-text, .extsession-grid .x-grid3 .x-small-editor .x-form-field-wrap {
+
+    margin-top: 0;
+    padding: 2px 2px 2px 2px;
+}
+
+.extsession-grid .x-grid3-body .x-grid3-td-checker {
+    background-image: none;
+    padding: 5px 0 0;
+}
+
+.extsession-grid .x-grid3-row-expander {
+    height: 15px;
+    margin-top: 8px;
+}
+
+.extsession-grid .x-grid3-col-actions {
+    padding: 3px 0 3px 5px !important;
+}
+
+ul.extsession-row-actions .btn {
+    padding: 0;
+    margin-right: 2px;
+    min-width: 15px;
+    font-size: larger;
+    border: none;
+    background: none;
+}
+
+ul.extsession-row-actions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media screen and (max-width: 962px) {
+
+    .modx-grid-small .x-toolbar-cell.tbar-checkbox {
+        padding: 5px 0;
+    }
+    .modx-grid-small .x-small-editor .x-form-text {
+        min-width: 30px;
+    }
+    .modx-grid-small .x-panel-bbar .x-toolbar-ct tbody tr {
+        display: inline-flex;
+    }
+
+    .tab-panel-wrapper .modx-grid-small .x-panel-tbar table tbody tr, .tab-panel-wrapper .modx-grid-small .x-panel-tbar table tbody tr td {
+        margin-bottom: 0 !important;
+    }
+}
+/* end grid small */
+
+
+/* grid row */
+.extsession-row-danger div,
+.extsession-row-danger span,
+.extsession-row-danger a {
+    color: palevioletred !important;
+}
+/* end grid row */
+
+
+/* search field */
+.x-field-search-clear,
+.x-field-search-go {
+    border-left: 1px solid #e4e4e4 !important;
+}
+.x-field-search-clear:hover,
+.x-field-search-go:hover {
+    border-left-color: transparent !important;
+}
+.x-field-search-clear:before {
+    content: '\f00d' !important;
+}
+.x-field-search-go {
+    right: 31px !important;
+    border-radius: 0 !important;
+}
+.x-field-search-go:before {
+    content: '\f002' !important;
+}
+/* end search field */
+
