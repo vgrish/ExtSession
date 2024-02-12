@@ -28,7 +28,7 @@ $config = [
         'snippets' => false,
         'chunks' => false,
     ],
-    'install' => true,
+    'install' => false,
     'download' => false,
 ];
 
