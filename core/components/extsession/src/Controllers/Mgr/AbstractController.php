@@ -27,9 +27,7 @@ abstract class AbstractController extends modExtraManagerController
      */
     public function initialize()
     {
-       // $this->extsession = $this->modx->services->get('extsession');
         $this->versionHash = '?v=' . dechex(crc32(ExtSessionConfig::VERSION));
-        $this->versionHash = '?v=' . dechex(time());
         parent::initialize();
     }
 
