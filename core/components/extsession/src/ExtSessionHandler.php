@@ -32,26 +32,6 @@ class ExtSessionHandler extends modSessionHandler
     private $session = null;
 
     /**
-     * @var int The maximum lifetime of a bot session
-     */
-    public $botGcMaxLifeTime = 0;
-
-    /**
-     * @var int The maximum lifetime of a empty user_agent session
-     */
-    public $emptyUserAgentGcMaxLifeTime = 0;
-
-    /**
-     * @var int The maximum lifetime of a empty user_id session
-     */
-    public $emptyUserIdGcMaxLifeTime = 0;
-
-    /**
-     * @var int The maximum lifetime of a NOT empty user_id session
-     */
-    public $notEmptyUserIdGcMaxLifeTime = 0;
-
-    /**
      * Creates an instance of a modSessionHandler class.
      *
      * @param modX &$modx A reference to a {@link modX} instance.
@@ -59,18 +39,6 @@ class ExtSessionHandler extends modSessionHandler
     function __construct(modX &$modx)
     {
         parent::__construct($modx);
-
-        $botGcMaxLifeTime = (int)$this->modx->getOption('extsession_bot_gc_maxlifetime');
-        $this->botGcMaxLifeTime = $botGcMaxLifeTime > 0 ? $botGcMaxLifeTime : $this->gcMaxLifetime;
-
-        $emptyUserAgentGcMaxLifeTime = (int)$this->modx->getOption('extsession_empty_user_agent_gc_maxlifetime');
-        $this->emptyUserAgentGcMaxLifeTime = $emptyUserAgentGcMaxLifeTime > 0 ? $emptyUserAgentGcMaxLifeTime : $this->gcMaxLifetime;
-
-        $emptyUserIdGcMaxLifeTime = (int)$this->modx->getOption('extsession_empty_user_id_agent_gc_maxlifetime');
-        $this->emptyUserIdGcMaxLifeTime = $emptyUserIdGcMaxLifeTime > 0 ? $emptyUserIdGcMaxLifeTime : $this->gcMaxLifetime;
-
-        $notEmptyUserIdGcMaxLifeTime = (int)$this->modx->getOption('extsession_not_empty_user_id_gc_maxlifetime');
-        $this->notEmptyUserIdGcMaxLifeTime = $notEmptyUserIdGcMaxLifeTime > 0 ? $notEmptyUserIdGcMaxLifeTime : $this->gcMaxLifetime;
     }
 
     /**
@@ -173,44 +141,49 @@ class ExtSessionHandler extends modSessionHandler
      */
     public function gc($max)
     {
-        $c = $this->modx->newQuery(Session::class);
-        $alias = $this->modx->getTableName(Session::class);
-        $c->setClassAlias($alias);
+        $nowTime = time();
+        $queryTime = microtime(true);
 
-        $time = time() - $this->botGcMaxLifeTime;
-        $c->query['where'][] = new xPDOQueryCondition([
-            'sql' => "(`user_bot` = 1 AND `access` < {$time})",
-            'conjunction' => "OR",
-        ]);
+        $standartClearing = (int)$this->modx->getOption('extsession_standart_clearing');
+        if ($standartClearing) {
 
-        $time = time() - $this->emptyUserAgentGcMaxLifeTime;
-        $c->query['where'][] = new xPDOQueryCondition([
-            'sql' => "(`user_agent` = '' AND `access` < {$time})",
-            'conjunction' => "OR",
-        ]);
+            $this->modx->removeCollection(Session::class, [
+                'access:<' => $nowTime - $this->gcMaxLifetime
+            ]);
 
-        $time = time() - $this->emptyUserIdGcMaxLifeTime;
-        $c->query['where'][] = new xPDOQueryCondition([
-            'sql' => "(`user_id` < 1 AND `access` < {$time})",
-            'conjunction' => "OR",
-        ]);
-
-        $time = time() - $this->notEmptyUserIdGcMaxLifeTime;
-        $c->query['where'][] = new xPDOQueryCondition([
-            'sql' => "(`user_id` > 0 AND `access` < {$time})",
-            'conjunction' => "OR",
-        ]);
-
-        $c->query['command'] = "DELETE {$alias}";
-        $result = ($c->prepare() && $c->stmt->execute());
-        if (!$result) {
-            $this->modx->log(modX::LOG_LEVEL_ERROR, 'Error clearing the session table. Sql: ' . print_r($c->toSQL(), true));
-            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($c->stmt->errorInfo(), true));
         } else {
-            $this->modx->log(modX::LOG_LEVEL_INFO, 'The session was successfully cleared. Sql: ' . print_r($c->toSQL(), true));
+
+            /** @var int The maximum lifetime of a bot session */
+            $botGcMaxLifeTime = (int)$this->modx->getOption('extsession_bot_gc_maxlifetime');
+            $botGcMaxLifeTime = $botGcMaxLifeTime > 0 ? $botGcMaxLifeTime : $this->gcMaxLifetime;
+
+            /** @var int The maximum lifetime of a empty user_id session */
+            $emptyUserIdGcMaxLifeTime = (int)$this->modx->getOption('extsession_empty_user_id_agent_gc_maxlifetime');
+            $emptyUserIdGcMaxLifeTime = $emptyUserIdGcMaxLifeTime > 0 ? $emptyUserIdGcMaxLifeTime : $this->gcMaxLifetime;
+
+            /** @var int The maximum lifetime of a NOT empty user_id session */
+            $notEmptyUserIdGcMaxLifeTime = (int)$this->modx->getOption('extsession_not_empty_user_id_gc_maxlifetime');
+            $notEmptyUserIdGcMaxLifeTime = $notEmptyUserIdGcMaxLifeTime > 0 ? $notEmptyUserIdGcMaxLifeTime : $this->gcMaxLifetime;
+
+            $this->modx->removeCollection(Session::class, [
+                'access:<' => $nowTime - $botGcMaxLifeTime,
+                'user_bot:=' => 1
+            ]);
+            $this->modx->removeCollection(Session::class, [
+                'access:<' => $nowTime - $emptyUserIdGcMaxLifeTime,
+                'user_id:=' => 0
+            ]);
+            $this->modx->removeCollection(Session::class, [
+                'access:<' => $nowTime - $notEmptyUserIdGcMaxLifeTime,
+                'user_id:>' => 0
+            ]);
         }
 
-        return $result;
+        $queryTime = microtime(true) - $queryTime;
+        $logLevel = (int)$this->modx->getOption('extsession_show_log') ? modX::LOG_LEVEL_ERROR : modX::LOG_LEVEL_INFO;
+        $this->modx->log($logLevel, 'Session cleanup time for mode "' . ($standartClearing ? 'standart' : 'ext') . '": ' . print_r(sprintf("%2.4f s", $queryTime), true));
+
+        return true;
     }
 
     /**

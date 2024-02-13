@@ -10,11 +10,11 @@ class Session extends \ExtSession\Model\Session
         'package' => 'ExtSession\\Model',
         'version' => '3.0',
         'extends' => 'MODX\\Revolution\\modSession',
-        'tableMeta' =>
+        'tableMeta' => 
         array (
             'engine' => 'InnoDB',
         ),
-        'fields' =>
+        'fields' => 
         array (
             'id' => '',
             'access' => NULL,
@@ -24,9 +24,9 @@ class Session extends \ExtSession\Model\Session
             'user_agent' => '',
             'data' => NULL,
         ),
-        'fieldMeta' =>
+        'fieldMeta' => 
         array (
-            'id' =>
+            'id' => 
             array (
                 'dbtype' => 'varchar',
                 'precision' => '191',
@@ -35,7 +35,7 @@ class Session extends \ExtSession\Model\Session
                 'index' => 'pk',
                 'default' => '',
             ),
-            'access' =>
+            'access' => 
             array (
                 'dbtype' => 'int',
                 'precision' => '20',
@@ -43,7 +43,7 @@ class Session extends \ExtSession\Model\Session
                 'null' => false,
                 'attributes' => 'unsigned',
             ),
-            'user_bot' =>
+            'user_bot' => 
             array (
                 'dbtype' => 'tinyint',
                 'precision' => '1',
@@ -52,17 +52,16 @@ class Session extends \ExtSession\Model\Session
                 'null' => false,
                 'default' => 0,
             ),
-            'user_id' =>
+            'user_id' => 
             array (
                 'dbtype' => 'int',
                 'precision' => '20',
                 'phptype' => 'integer',
                 'null' => false,
-                'index' => 'index',
                 'attributes' => 'unsigned',
                 'default' => 0,
             ),
-            'user_ip' =>
+            'user_ip' => 
             array (
                 'dbtype' => 'varchar',
                 'precision' => '45',
@@ -70,31 +69,31 @@ class Session extends \ExtSession\Model\Session
                 'null' => false,
                 'default' => '',
             ),
-            'user_agent' =>
+            'user_agent' => 
             array (
                 'dbtype' => 'varchar',
-                'precision' => '255',
+                'precision' => '100',
                 'phptype' => 'string',
                 'null' => false,
                 'default' => '',
             ),
-            'data' =>
+            'data' => 
             array (
                 'dbtype' => 'mediumtext',
                 'phptype' => 'string',
             ),
         ),
-        'indexes' =>
+        'indexes' => 
         array (
-            'PRIMARY' =>
+            'PRIMARY' => 
             array (
                 'alias' => 'PRIMARY',
                 'primary' => true,
                 'unique' => true,
                 'type' => 'BTREE',
-                'columns' =>
+                'columns' => 
                 array (
-                    'id' =>
+                    'id' => 
                     array (
                         'length' => '',
                         'collation' => 'A',
@@ -102,15 +101,15 @@ class Session extends \ExtSession\Model\Session
                     ),
                 ),
             ),
-            'access' =>
+            'access' => 
             array (
                 'alias' => 'access',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' =>
+                'columns' => 
                 array (
-                    'access' =>
+                    'access' => 
                     array (
                         'length' => '',
                         'collation' => 'A',
@@ -118,15 +117,15 @@ class Session extends \ExtSession\Model\Session
                     ),
                 ),
             ),
-            'user_bot' =>
+            'user_bot' => 
             array (
                 'alias' => 'user_bot',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' =>
+                'columns' => 
                 array (
-                    'user_bot' =>
+                    'user_bot' => 
                     array (
                         'length' => '',
                         'collation' => 'A',
@@ -134,15 +133,15 @@ class Session extends \ExtSession\Model\Session
                     ),
                 ),
             ),
-            'user_id' =>
+            'user_id' => 
             array (
                 'alias' => 'user_id',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' =>
+                'columns' => 
                 array (
-                    'user_id' =>
+                    'user_id' => 
                     array (
                         'length' => '',
                         'collation' => 'A',
@@ -150,15 +149,15 @@ class Session extends \ExtSession\Model\Session
                     ),
                 ),
             ),
-            'user_ip' =>
+            'user_ip' => 
             array (
                 'alias' => 'user_ip',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' =>
+                'columns' => 
                 array (
-                    'user_ip' =>
+                    'user_ip' => 
                     array (
                         'length' => '',
                         'collation' => 'A',
@@ -166,15 +165,43 @@ class Session extends \ExtSession\Model\Session
                     ),
                 ),
             ),
-            'user_agent' =>
+            'user_agent' => 
             array (
                 'alias' => 'user_agent',
                 'primary' => false,
                 'unique' => false,
                 'type' => 'BTREE',
-                'columns' =>
+                'columns' => 
                 array (
-                    'user_agent' =>
+                    'user_agent' => 
+                    array (
+                        'length' => '',
+                        'collation' => 'A',
+                        'null' => false,
+                    ),
+                ),
+            ),
+            'united' => 
+            array (
+                'alias' => 'united',
+                'primary' => false,
+                'unique' => false,
+                'type' => 'BTREE',
+                'columns' => 
+                array (
+                    'access' => 
+                    array (
+                        'length' => '',
+                        'collation' => 'A',
+                        'null' => false,
+                    ),
+                    'user_bot' => 
+                    array (
+                        'length' => '',
+                        'collation' => 'A',
+                        'null' => false,
+                    ),
+                    'user_id' => 
                     array (
                         'length' => '',
                         'collation' => 'A',
@@ -183,9 +210,9 @@ class Session extends \ExtSession\Model\Session
                 ),
             ),
         ),
-        'aggregates' =>
+        'aggregates' => 
         array (
-            'User' =>
+            'User' => 
             array (
                 'class' => 'MODX\\Revolution\\modUser',
                 'local' => 'user_id',
@@ -193,7 +220,7 @@ class Session extends \ExtSession\Model\Session
                 'cardinality' => 'one',
                 'owner' => 'foreign',
             ),
-            'Profile' =>
+            'Profile' => 
             array (
                 'class' => 'MODX\\Revolution\\modUserProfile',
                 'local' => 'user_id',
@@ -202,13 +229,13 @@ class Session extends \ExtSession\Model\Session
                 'owner' => 'foreign',
             ),
         ),
-        'validation' =>
+        'validation' => 
         array (
-            'rules' =>
+            'rules' => 
             array (
-                'id' =>
+                'id' => 
                 array (
-                    'invalid' =>
+                    'invalid' => 
                     array (
                         'type' => 'preg_match',
                         'rule' => '/^[0-9a-zA-Z,-]{22,191}$/',

@@ -126,10 +126,6 @@ abstract class AbstractGetListProcessor extends GetListProcessor
             }
         }
         $q->query['columns'] = ["SQL_CALC_FOUND_ROWS " . implode(',', $columns)];
-        $q->query['sortby'][] = [
-            'column' => "`{$this->getClassAlias()}`.`{$this->primaryKeyField}`",
-            'direction' => 'ASC',
-        ];
         if ($limit > 0) {
             $q->limit($limit, $start);
         }

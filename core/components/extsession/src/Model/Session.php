@@ -53,17 +53,6 @@ class Session extends modSession
             parent::set('user_bot', $userBot);
         }
 
-        if ((int)$this->xpdo->getOption('extsession_show_log')) {
-            $this->xpdo->log(modX::LOG_LEVEL_ERROR, 'Session Log: ' . var_export([
-                    'id' => parent::get('id'),
-                    'access' => parent::get('access'),
-                    'user_bot' => parent::get('user_bot'),
-                    'user_ip' => parent::get('user_ip'),
-                    'user_agent' => parent::get('user_agent'),
-                ], true)
-            );
-        }
-
         $saved = parent::save($cacheFlag);
 
         return $saved;
@@ -160,9 +149,9 @@ class Session extends modSession
     {
         if (isset($_SERVER['HTTP_USER_AGENT'])) {
             $v = self::_sanitizeString($_SERVER['HTTP_USER_AGENT']);
-            return mb_substr($v, 0, 255, 'utf-8');
+            return trim(mb_substr($v, 0, 100, 'utf-8'));
         }
-        return '';
+        return 'unknown';
     }
 
     /**

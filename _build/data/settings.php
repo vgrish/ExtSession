@@ -27,9 +27,9 @@ return [
         'value' => 604800,
         'area' => 'extsession_main',
     ],
-    'empty_user_agent_gc_maxlifetime' => [
-        'xtype' => 'numberfield',
-        'value' => 86400,
+    'standart_clearing' => [
+        'xtype' => 'combo-boolean',
+        'value' => false,
         'area' => 'extsession_main',
     ],
     'show_log' => [
