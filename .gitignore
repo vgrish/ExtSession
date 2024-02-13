@@ -2,4 +2,4 @@
 tmp
 /_build/resolvers/_symlinks.php
 /core/components/extsession/vendor/
-/_tests/
+/_tests
