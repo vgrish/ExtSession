@@ -20,4 +20,6 @@ $_lang = array_merge($_lang, [
     'extsession_confirm_remove' => 'Вы уверены, что хотите удалить это?',
     'extsession_action_truncate' => 'Очистить Все',
     'extsession_confirm_truncate' => 'Вы уверены, что хотите очистить все данные?',
+    'extsession_action_session_gc' => 'Сборка мусора',
+    'extsession_confirm_session_gc' => 'Вы уверены, что хотите запустить сборку мусора?',
 ]);

@@ -191,6 +191,11 @@ Ext.extend(extsession.grid.Session, MODx.grid.Grid, {
             menu: {
                 text: '<i class="icon icon-cogs"></i> ',
                 menu: [{
+                    text: '<i class="icon icon-trash-o"></i> ' + _('extsession_action_session_gc'),
+                    cls: 'extsession-cogs',
+                    handler: this.SessionGc,
+                    scope: this
+                },'-',{
                     text: '<i class="icon icon-trash-o"></i> ' + _('extsession_action_truncate'),
                     cls: 'extsession-cogs',
                     handler: this.Truncate,
@@ -324,22 +329,6 @@ Ext.extend(extsession.grid.Session, MODx.grid.Grid, {
                     return value;
                 }
             },
-
-            /* 'Relation.alias': {
-                 width: 35,
-                 header: _('extsession_alias'),
-                 sortable: true,
-                 /!* editor: {
-                      xtype: 'textfield',
-                      allowBlank: true
-                  }*!/
-             },
-             'Relation.class': {
-                 header: _('extsession_class'),
-                 sortable: true,
-                 hidden: false,
-                 width: 35,
-             },*/
         };
 
         var fields = this.getFields(config);
@@ -397,6 +386,39 @@ Ext.extend(extsession.grid.Session, MODx.grid.Grid, {
         return this.processEvent('click', e);
     },
 
+    SessionGc: function () {
+        extsession.Msg.confirm(
+            _('extsession_action_session_gc'),
+            _('extsession_confirm_session_gc'),
+            function (val) {
+                if (val == 'yes') {
+                    MODx.Ajax.request({
+                        url: extsession.config.connectorUrl,
+                        params: {
+                            action: 'Session\\GarbageCollect',
+                        },
+                        listeners: {
+                            success: {
+                                fn: function () {
+                                    this.refresh();
+                                },
+                                scope: this
+                            },
+                            failure: {
+                                fn: function (r) {
+                                    if (r.message) {
+                                        extsession.Msg.alert(_('error'), r.message);
+                                    }
+                                },
+                                scope: this
+                            }
+                        }
+                    })
+                }
+            },
+            this
+        );
+    },
     Truncate: function () {
         extsession.Msg.confirm(
             _('extsession_action_truncate'),
