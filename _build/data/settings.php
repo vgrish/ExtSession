@@ -27,11 +27,17 @@ return [
         'value' => 604800,
         'area' => 'extsession_main',
     ],
+    'limit_clearing' => [
+        'xtype' => 'numberfield',
+        'value' => 5000,
+        'area' => 'extsession_main',
+    ],
     'standart_clearing' => [
         'xtype' => 'combo-boolean',
         'value' => false,
         'area' => 'extsession_main',
     ],
+
     'show_log' => [
         'xtype' => 'combo-boolean',
         'value' => false,

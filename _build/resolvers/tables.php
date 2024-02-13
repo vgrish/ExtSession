@@ -15,26 +15,31 @@ if ($transport->xpdo) {
         case xPDOTransport::ACTION_INSTALL:
         case xPDOTransport::ACTION_UPGRADE:
 
-
-            $sessionTable = $modx->getTableName(modSession::class);
-            $modx->query("TRUNCATE TABLE {$sessionTable}");
+            $modx->query("TRUNCATE TABLE {$modx->getTableName(modSession::class)}");
 
             $modx->addPackage('ExtSession\Model', MODX_CORE_PATH . 'components/extsession/src/', null, 'ExtSession\\');
             $manager = $modx->getManager();
             $objects = [];
+            $schemaFields = [];
             $schemaFile = MODX_CORE_PATH . 'components/extsession/schema/extsession.mysql.schema.xml';
             if (is_file($schemaFile)) {
                 $schema = new SimpleXMLElement($schemaFile, 0, true);
                 if (isset($schema->object)) {
                     foreach ($schema->object as $obj) {
-                        $objects[] = (string)$obj['class'];
+                        $class = 'ExtSession\\Model\\' . (string)$obj['class'];
+                        $objects[] = $class;
+                        $schemaFields[$class] = [];
+                        foreach ($obj->children() as $name => $field) {
+                            if ($name === 'field' && $field->attributes()->key) {
+                                $schemaFields[$class][] = (string)$field->attributes()->key;
+                            }
+                        }
                     }
                 }
                 unset($schema);
             }
 
             foreach ($objects as $class) {
-                $class = 'ExtSession\\Model\\' . $class;
                 $table = $modx->getTableName($class);
                 $sql = "SHOW TABLES LIKE '" . trim($table, '`') . "'";
                 $stmt = $modx->prepare($sql);
@@ -54,14 +59,31 @@ if ($transport->xpdo) {
                     while ($cl = $c->fetch(PDO::FETCH_ASSOC)) {
                         $tableFields[$cl['Field']] = $cl['Field'];
                     }
-                    foreach ($modx->getFields($class) as $field => $v) {
-                        if (in_array($field, $tableFields)) {
-                            unset($tableFields[$field]);
-                            $manager->alterField($class, $field);
-                        } else {
-                            $manager->addField($class, $field);
+
+                    if (!empty($schemaFields[$class])) {
+                        foreach ($schemaFields[$class] as $idx => $field) {
+                            if (in_array($field, $tableFields)) {
+                                unset($tableFields[$field]);
+                                if (isset($schemaFields[$class][$idx - 1])) {
+                                    $manager->alterField($class, $field, ['after' => $schemaFields[$class][$idx - 1]]);
+                                } else {
+                                    $manager->alterField($class, $field);
+                                }
+                            } else {
+                                $manager->addField($class, $field);
+                            }
+                        }
+                    } else {
+                        foreach ($modx->getFields($class) as $field => $v) {
+                            if (in_array($field, $tableFields)) {
+                                unset($tableFields[$field]);
+                                $manager->alterField($class, $field);
+                            } else {
+                                $manager->addField($class, $field);
+                            }
                         }
                     }
+
                     foreach ($tableFields as $field) {
                         $manager->removeField($class, $field);
                     }

@@ -141,14 +141,12 @@ class ExtSessionHandler extends modSessionHandler
      */
     public function gc($max)
     {
-        $nowTime = time();
-        $queryTime = microtime(true);
-
         $standartClearing = (int)$this->modx->getOption('extsession_standart_clearing');
         if ($standartClearing) {
 
+            $queryTime = microtime(true);
             $this->modx->removeCollection(Session::class, [
-                'access:<' => $nowTime - $this->gcMaxLifetime
+                'access:<' => time() - $this->gcMaxLifetime
             ]);
 
         } else {
@@ -165,18 +163,32 @@ class ExtSessionHandler extends modSessionHandler
             $notEmptyUserIdGcMaxLifeTime = (int)$this->modx->getOption('extsession_not_empty_user_id_gc_maxlifetime');
             $notEmptyUserIdGcMaxLifeTime = $notEmptyUserIdGcMaxLifeTime > 0 ? $notEmptyUserIdGcMaxLifeTime : $this->gcMaxLifetime;
 
-            $this->modx->removeCollection(Session::class, [
-                'access:<' => $nowTime - $botGcMaxLifeTime,
-                'user_bot:=' => 1
-            ]);
-            $this->modx->removeCollection(Session::class, [
-                'access:<' => $nowTime - $emptyUserIdGcMaxLifeTime,
-                'user_id:=' => 0
-            ]);
-            $this->modx->removeCollection(Session::class, [
-                'access:<' => $nowTime - $notEmptyUserIdGcMaxLifeTime,
-                'user_id:>' => 0
-            ]);
+            $limitClearing = (int)$this->modx->getOption('extsession_limit_clearing');
+            $limitClearing = $limitClearing > 0 ? $limitClearing : 5000;
+
+            $table = $this->modx->getTableName(Session::class);
+
+            $nowTime = time();
+            $queryTime = microtime(true);
+
+            $time = $nowTime - $botGcMaxLifeTime;
+            if ($stmt = $this->modx->prepare("DELETE FROM {$table} WHERE `access` < {$time} AND `user_bot` = 1 LIMIT {$limitClearing};")) {
+                if (!$stmt->execute()) {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($stmt->errorInfo(), true));
+                }
+            }
+            $time = $nowTime - $emptyUserIdGcMaxLifeTime;
+            if ($stmt = $this->modx->prepare("DELETE FROM {$table} WHERE `access` < {$time} AND `user_id` = 0 LIMIT {$limitClearing};")) {
+                if (!$stmt->execute()) {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($stmt->errorInfo(), true));
+                }
+            }
+            $time = $nowTime - $notEmptyUserIdGcMaxLifeTime;
+            if ($stmt = $this->modx->prepare("DELETE FROM {$table} WHERE `access` < {$time} AND `user_id` > 0 LIMIT {$limitClearing};")) {
+                if (!$stmt->execute()) {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($stmt->errorInfo(), true));
+                }
+            }
         }
 
         $queryTime = microtime(true) - $queryTime;
